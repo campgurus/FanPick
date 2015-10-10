@@ -1,6 +1,6 @@
 source 'https://rubygems.org'
 
-
+gem 'dotenv-rails', :groups => [:development, :test, :production], :require => 'dotenv/rails-now'
 # Bundle edge Rails instead: gem 'rails', github: 'rails/rails'
 gem 'rails', '4.2.4'
 # Use postgresql as the database for Active Record
@@ -63,6 +63,16 @@ group :test do
 end
 
 gem 'rails_12factor', group: :production
+
+gem 'puma'
+
+gem 'xmlstats'
+
+# task scheduler
+gem 'whenever', :require => false
+
+# error tracking
+gem 'rollbar', '~> 2.2.1'
 
 ruby "2.2.1"
 
