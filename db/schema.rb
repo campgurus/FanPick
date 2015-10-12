@@ -11,7 +11,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20151010112910) do
+ActiveRecord::Schema.define(version: 20151012213540) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -29,6 +29,55 @@ ActiveRecord::Schema.define(version: 20151010112910) do
     t.datetime "created_at",         null: false
     t.datetime "updated_at",         null: false
     t.string   "event_id"
+  end
+
+  create_table "mlb_box_scores", force: :cascade do |t|
+    t.string   "last_name"
+    t.string   "first_name"
+    t.string   "display_name"
+    t.string   "position"
+    t.integer  "bat_order"
+    t.integer  "sub_bat_order"
+    t.integer  "singles"
+    t.integer  "doubles"
+    t.integer  "triples"
+    t.integer  "hits"
+    t.integer  "rbi"
+    t.integer  "sacrifices"
+    t.integer  "at_bats"
+    t.integer  "plate_appearances"
+    t.integer  "home_runs"
+    t.integer  "sac_flies"
+    t.integer  "sac_hits"
+    t.integer  "stolen_bases"
+    t.integer  "caught_stealing"
+    t.integer  "rbi_with_two_outs"
+    t.integer  "total_bases"
+    t.integer  "runs"
+    t.integer  "walks"
+    t.integer  "strike_outs"
+    t.integer  "left_on_base"
+    t.integer  "hit_by_pitch"
+    t.string   "team_abbreviation"
+    t.float    "avg"
+    t.float    "obp"
+    t.float    "slg"
+    t.float    "ops"
+    t.float    "at_bats_per_home_run"
+    t.float    "at_bats_per_rbi"
+    t.float    "walk_rate"
+    t.float    "plate_appearances_per_rbi"
+    t.float    "plate_appearances_per_home_run"
+    t.integer  "extra_base_hits"
+    t.float    "stolen_base_average"
+    t.float    "strike_out_rate"
+    t.string   "ops_string"
+    t.string   "slg_string"
+    t.string   "obp_string"
+    t.string   "avg_string"
+    t.string   "batting_highlights"
+    t.datetime "created_at",                     null: false
+    t.datetime "updated_at",                     null: false
   end
 
   create_table "sites", force: :cascade do |t|
