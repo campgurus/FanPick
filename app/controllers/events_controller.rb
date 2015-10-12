@@ -1,24 +1,54 @@
 class EventsController < ApplicationController
   def index
   	@date = Date.today
-  	@events = Xmlstats.events(@date)
-  	@events.each do |event|
-      away_team_create(event)
-      home_team_create(event)
-      site_create(event)
-  		Event.create(
-        event_status: event.event_status,
-		    sport: event.sport,
-		    start_date_time: event.start_date_time,
-		    season_type: event.season_type,
-		    away_team_id: Team.where(team_id: event.away_team.team_id).first.id,
-		    home_team_id: Team.where(team_id: event.home_team.team_id).first.id,
-		    site_id: Site.where(name: event.site.name).first.id,
-		    away_points_scored: event.away_points_scored,
-		    home_points_scored: event.home_points_scored,
-		    event_id: event.event_id
-  		)
-  	end
+  	counter = 0
+  	game_count = 0
+  	if Event.count == 0 # get all events for the next 7 days if the Events tale is blank
+  		while counter < 8 do
+		  	games = Xmlstats.events(@date - counter.day)
+		  	games.each do |event|
+		      away_team_create(event)
+		      home_team_create(event)
+		      site_create(event)
+		  		Event.create(
+		        event_status: event.event_status,
+				    sport: event.sport,
+				    start_date_time: event.start_date_time,
+				    season_type: event.season_type,
+				    away_team_id: Team.where(team_id: event.away_team.team_id).first.id,
+				    home_team_id: Team.where(team_id: event.home_team.team_id).first.id,
+				    site_id: Site.where(name: event.site.name).first.id,
+				    away_points_scored: event.away_points_scored,
+				    home_points_scored: event.home_points_scored,
+				    event_id: event.event_id
+		  		)
+		  	end
+		  	counter += 1
+	  	end
+	  else
+	  	for i in (1..7) do
+		  	games = Xmlstats.events(@date - i)
+	  		games.each do |event|
+		      away_team_create(event)
+		      home_team_create(event)
+		      site_create(event)
+		  		Event.create(
+		        event_status: event.event_status,
+				    sport: event.sport,
+				    start_date_time: event.start_date_time,
+				    season_type: event.season_type,
+				    away_team_id: Team.where(team_id: event.away_team.team_id).first.id,
+				    home_team_id: Team.where(team_id: event.home_team.team_id).first.id,
+				    site_id: Site.where(name: event.site.name).first.id,
+				    away_points_scored: event.away_points_scored,
+				    home_points_scored: event.home_points_scored,
+				    event_id: event.event_id
+		  		)
+		  	end
+		  end
+  	end 	
+    @events = Event.all
+    @past_events = Event.all.select{|e| e.event_status == "completed"}
   end
 
   def away_team_create(event)
@@ -58,7 +88,7 @@ class EventsController < ApplicationController
       city: event.site.city,
       state: event.site.state,
       capacity: event.site.capacity,
-      surface: event.site.surface,
+      # surface: event.site.surface,
       name: event.site.name
   	)	
   end
