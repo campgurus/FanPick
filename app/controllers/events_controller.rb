@@ -2,7 +2,6 @@ class EventsController < ApplicationController
   def index
   	@date = Date.today
   	counter = 0
-  	game_count = 0
   	if Event.count == 0 # get all events for the next 7 days if the Events tale is blank
   		while counter < 8 do
 		  	games = Xmlstats.events(@date - counter.day)
@@ -23,6 +22,9 @@ class EventsController < ApplicationController
 				    event_id: event.event_id
 		  		)
 		  	end
+	  		if event.event_status == "completed"
+	  			save_mlb_box_scores(event)
+	  		end
 		  	counter += 1
 	  	end
 	  else
@@ -44,6 +46,9 @@ class EventsController < ApplicationController
 				    home_points_scored: event.home_points_scored,
 				    event_id: event.event_id
 		  		)
+		  		if event.event_status == "completed"
+		  			save_mlb_box_scores(event)
+		  		end
 		  	end
 		  end
   	end 	
@@ -91,5 +96,56 @@ class EventsController < ApplicationController
       # surface: event.site.surface,
       name: event.site.name
   	)	
+  end
+
+  def save_mlb_box_scores(event)
+  	box_score = Xmlstats.mlb_box_score(event.event_id)
+  	MlbBoxScore.create(
+      event_id: box_score.event_id, #need to confirm that box_score.event_id == event.event_id 
+      last_name: box_score.last_name,
+	    first_name: box_score.first_name,
+	    display_name: box_score.display_name,
+	    position: box_score.position,
+	    bat_order: box_score.bat_order,
+	    sub_bat_order: box_score.sub_bat_order,
+	    singles: box_score.singles,
+	    doubles: box_score.doubles,
+	    triples: box_score.triples,
+	    hits: box_score.hits,
+	    rbi: box_score.rbi,
+	    sacrifices: box_score.sacrifices,
+	    at_bats: box_score.at_bats,
+	    plate_appearances: box_score.plate_appearances,
+	    home_runs: box_score.home_runs,
+	    sac_flies: box_score.sac_flies,
+	    sac_hits: box_score.sac_hits,
+	    stolen_bases: box_score.stolen_bases,
+	    caught_stealing: box_score.caught_stealing,
+	    rbi_with_two_outs: box_score.rbi_with_two_outs,
+	    total_bases: box_score.total_bases,
+	    runs: box_score.runs,
+	    walks: box_score.walks,
+	    strike_outs: box_score.strike_outs,
+	    left_on_base: box_score.left_on_base,
+	    hit_by_pitch: box_score.hit_by_pitch,
+	    team_abbreviation: box_score.team_abbreviation,
+	    avg: box_score.avg,
+	    obp: box_score.obp,
+	    slg: box_score.slg,
+	    ops: box_score.ops,
+	    at_bats_per_home_run: box_score.at_bats_per_home_run,
+	    at_bats_per_rbi: box_score.at_bats_per_rbi,
+	    walk_rate: box_score.walk_rate,
+	    plate_appearances_per_rbi: box_score.plate_appearances_per_rbi,
+	    plate_appearances_per_home_run: box_score.plate_appearances_per_home_run,
+	    extra_base_hits: box_score.extra_base_hits,
+	    stolen_base_average: box_score.stolen_base_average,
+	    strike_out_rate: box_score.strikeout_rate,
+	    ops_string: box_score.ops_string,
+	    slg_string: box_score.slg_string,
+	    obp_string: box_score.obp_string,
+	    avg_string: box_score.avg_string,
+	    batting_highlights: box_score.batting_highlights
+  		)
   end
 end
