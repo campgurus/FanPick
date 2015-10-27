@@ -74,10 +74,18 @@ class EventsController < ApplicationController
   	)	
   end
 
+  def player_create(athlete) # finds or creates new player based on display name. qq:what about same names?
+  	Player.find_or_create_by(display_name: athlete.display_name) do |r|
+	    r.first_name = athlete.first_name
+	    r.last_name = athlete.last_name
+	  end
+  end
+
   def save_nba_box_scores(event) #creates a box score for each home and away player for completed games
   	box_score = Xmlstats.nba_box_score(event.event_id)
   	player_stats = box_score.away_stats + box_score.home_stats # creates a single array with all players
   	player_stats.each do |player|
+  		player_create(player) 
 	  	NbaBoxScore.create(
 	      event_id: box_score.event_id, #need to confirm that box_score.event_id == event.event_id 
 	      last_name: player.last_name,
