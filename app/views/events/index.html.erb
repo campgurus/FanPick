@@ -1,6 +1,19 @@
-<h2><%= @past_events.count %> Completed Events: <%#= (Date.today).strftime("%A, %B %e, %Y")%></h2>
+<h2><%= @nba_events.count %> Upcoming NBA events </h2>
 <ul>
-	<% @past_events.sort_by {|e| e.start_date_time}.reverse.each do |event| %>
+	<% @nba_events.sort_by {|e| e.start_date_time}.reverse.each do |event| %>
+		<li>
+		  <%= DateTime.parse(event.start_date_time).strftime("%A, %d %b %Y %l:%M %p") %>
+		  <%= Team.find(event.away_team_id).full_name %>
+		  <%= Team.find(event.home_team_id).full_name %>
+		  <%#= event.event_status %>
+		  <%#= event.event_id %>
+  	</li>
+	<% end %>
+</ul>
+
+<h2><%= @past_nba_events.count %> Completed Events: <%#= (Date.today).strftime("%A, %B %e, %Y")%></h2>
+<ul>
+	<% @past_nba_events.sort_by {|e| e.start_date_time}.reverse.each do |event| %>
 		<li>
 		  <%= DateTime.parse(event.start_date_time).strftime("%A, %d %b %Y %l:%M %p") %>
 		  <%= Team.find(event.away_team_id).full_name %>

@@ -1,0 +1,49 @@
+FactoryGirl.define do
+  factory :mlb_box_score do
+    last_name "MyString"
+first_name "MyString"
+display_name "MyString"
+position "MyString"
+bat_order 1
+sub_bat_order 1
+singles 1
+doubles 1
+triples 1
+hits 1
+rbi 1
+sacrifices 1
+at_bats 1
+plate_appearances 1
+home_runs 1
+sac_flies 1
+sac_hits 1
+stolen_bases 1
+caught_stealing 1
+rbi_with_two_outs 1
+total_bases 1
+runs 1
+walks 1
+strike_outs 1
+left_on_base 1
+hit_by_pitch 1
+team_abbreviation "MyString"
+avg 1.5
+obp 1.5
+slg 1.5
+ops 1.5
+at_bats_per_home_run 1.5
+at_bats_per_rbi 1.5
+walk_rate 1.5
+plate_appearances_per_rbi 1.5
+plate_appearances_per_home_run 1.5
+extra_base_hits 1
+stolen_base_average 1.5
+strike_out_rate 1.5
+ops_string "MyString"
+slg_string "MyString"
+obp_string "MyString"
+avg_string "MyString"
+batting_highlights "MyString"
+  end
+
+end
