@@ -11,7 +11,7 @@
 	<% end %>
 </ul>
 
-<h2><%= @past_nba_events.count %> Completed Events: <%#= (Date.today).strftime("%A, %B %e, %Y")%></h2>
+<h2><%= @past_nba_events.count %> Completed NBA Games: <%#= (Date.today).strftime("%A, %B %e, %Y")%></h2>
 <ul>
 	<% @past_nba_events.sort_by {|e| e.start_date_time}.reverse.each do |event| %>
 		<li>

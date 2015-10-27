@@ -19,14 +19,13 @@ class EventsController < ApplicationController
 		    event_id: event.event_id
   		)
   	end
-	  	# if event.event_status == "completed"
-	  	# 	if event.sport == 'mlb'
-	  	# 		save_mlb_box_scores(event)
-	  	# 	elsif event.sport == 'nba'
-	  	# 		save_nba_box_scores(event)
-	  	# 	end
-	  # 	# end
-  	# end 	
+  	if event.event_status == "completed"
+  		if event.sport == 'mlb'
+  			save_mlb_box_scores(event)
+  		elsif event.sport == 'nba'
+  			save_nba_box_scores(event)
+  		end
+  	end	
     @events = Event.all
     @nba_events = Event.select{|e| e.sport == "NBA"}
     @past_events = Event.all.select{|e| e.event_status == "completed"}
@@ -75,55 +74,42 @@ class EventsController < ApplicationController
   	)	
   end
 
-  def save_nba_box_scores(event)
+  def save_nba_box_scores(event) #creates a box score for each home and away player for completed games
   	box_score = Xmlstats.nba_box_score(event.event_id)
-  	NbaBoxScore.create(
-      event_id: box_score.event_id, #need to confirm that box_score.event_id == event.event_id 
-      last_name: box_score.last_name,
-	    first_name: box_score.first_name,
-	    display_name: box_score.display_name,
-	    position: box_score.position,
-	    bat_order: box_score.bat_order,
-	    sub_bat_order: box_score.sub_bat_order,
-	    singles: box_score.singles,
-	    doubles: box_score.doubles,
-	    triples: box_score.triples,
-	    hits: box_score.hits,
-	    rbi: box_score.rbi,
-	    sacrifices: box_score.sacrifices,
-	    at_bats: box_score.at_bats,
-	    plate_appearances: box_score.plate_appearances,
-	    home_runs: box_score.home_runs,
-	    sac_flies: box_score.sac_flies,
-	    sac_hits: box_score.sac_hits,
-	    stolen_bases: box_score.stolen_bases,
-	    caught_stealing: box_score.caught_stealing,
-	    rbi_with_two_outs: box_score.rbi_with_two_outs,
-	    total_bases: box_score.total_bases,
-	    runs: box_score.runs,
-	    walks: box_score.walks,
-	    strike_outs: box_score.strike_outs,
-	    left_on_base: box_score.left_on_base,
-	    hit_by_pitch: box_score.hit_by_pitch,
-	    team_abbreviation: box_score.team_abbreviation,
-	    avg: box_score.avg,
-	    obp: box_score.obp,
-	    slg: box_score.slg,
-	    ops: box_score.ops,
-	    at_bats_per_home_run: box_score.at_bats_per_home_run,
-	    at_bats_per_rbi: box_score.at_bats_per_rbi,
-	    walk_rate: box_score.walk_rate,
-	    plate_appearances_per_rbi: box_score.plate_appearances_per_rbi,
-	    plate_appearances_per_home_run: box_score.plate_appearances_per_home_run,
-	    extra_base_hits: box_score.extra_base_hits,
-	    stolen_base_average: box_score.stolen_base_average,
-	    strike_out_rate: box_score.strikeout_rate,
-	    ops_string: box_score.ops_string,
-	    slg_string: box_score.slg_string,
-	    obp_string: box_score.obp_string,
-	    avg_string: box_score.avg_string,
-	    batting_highlights: box_score.batting_highlights
-  		)
+  	player_stats = box_score.away_stats + box_score.home_stats # creates a single array with all players
+  	player_stats.each do |player|
+	  	NbaBoxScore.create(
+	      event_id: box_score.event_id, #need to confirm that box_score.event_id == event.event_id 
+	      last_name: player.last_name,
+		    first_name: player.first_name,
+		    display_name: player.display_name,
+		    position: player.position,
+		    minutes: player.minutes,
+		    points: player.points,
+		    assists: player.assists,
+		    turnovers: player.turnovers,
+		    steals: player.steals,
+		    blocks: player.blocks,
+		    rebounds: player.rebounds,
+		    field_goals_attempted: player.field_goals_attempted,
+		    field_goals_made: player.field_goals_made,
+		    three_point_field_goals_attempted: player.three_point_field_goals_attempted,
+		    three_point_field_goals_made: player.three_point_field_goals_made,
+		    free_throws_attempted: player.free_throws_attempted,
+		    free_throws_made: player.free_throws_made,
+		    defensive_rebounds: player.defensive_rebounds,
+		    offensive_rebounds: player.offensive_rebounds,
+		    personal_fouls: player.personal_fouls,
+		    team_id: player.team_id,
+		    is_starter: player.is_starter,
+		    field_goal_percentage: player.field_goal_percentage,
+		    three_point_percentage: player.three_point_percentage,
+		    free_throw_percentage: player.free_throw_percentage,
+		    field_goal_percentage_string: player.field_goal_percentage_string,
+		    three_point_field_goal_percentage_string: player.three_point_field_goal_percentage_string,
+		    free_throw_percentage_string: player.free_throw_percentage_string
+	  		)
+    end 
   end
 
   def save_mlb_box_scores(event)
