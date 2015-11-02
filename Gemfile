@@ -68,6 +68,9 @@ gem 'puma'
 
 gem 'xmlstats'
 
+#CMS panel for admin
+gem 'rails_admin'
+
 # task scheduler
 gem 'whenever', :require => false
 
