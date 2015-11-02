@@ -1,0 +1,8 @@
+<h2><%= Team.find(@event.home_team_id).full_name %> vs <%= Team.find(@event.away_team_id).full_name %> </h2>
+<%= @event.event_status %>
+<% if @event.event_status == 'completed' %>
+  <%= @event.home_points_scored %> | <%= @event.home_points_scored %>
+<% end %>
+
+<ul>
+</ul>

@@ -11,7 +11,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20151027170449) do
+ActiveRecord::Schema.define(version: 20151028021643) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -110,14 +110,38 @@ ActiveRecord::Schema.define(version: 20151027170449) do
     t.datetime "created_at",                               null: false
     t.datetime "updated_at",                               null: false
     t.integer  "event_id"
+    t.integer  "player_id"
   end
 
   create_table "players", force: :cascade do |t|
     t.string   "last_name"
     t.string   "first_name"
     t.string   "display_name"
-    t.datetime "created_at",   null: false
-    t.datetime "updated_at",   null: false
+    t.datetime "created_at",        null: false
+    t.datetime "updated_at",        null: false
+    t.string   "birthdate"
+    t.integer  "age"
+    t.integer  "height_in"
+    t.integer  "weight_lb"
+    t.integer  "games_played"
+    t.string   "avg_minutes"
+    t.float    "fg_made"
+    t.float    "fg_attempted"
+    t.float    "threes_made"
+    t.float    "threes_attempted"
+    t.float    "threes_percentage"
+    t.float    "ft_made"
+    t.float    "ft_attempted"
+    t.float    "ft_percentage"
+    t.float    "oreb"
+    t.float    "dreb"
+    t.float    "rebounds"
+    t.float    "assists"
+    t.float    "turnovers"
+    t.float    "steals"
+    t.float    "blocks"
+    t.float    "fouls"
+    t.float    "points"
   end
 
   create_table "sites", force: :cascade do |t|

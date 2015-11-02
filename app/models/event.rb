@@ -2,7 +2,6 @@ class Event < ActiveRecord::Base
   validates :event_id, :uniqueness => true
   has_many :mlb_box_scores
   has_many :nba_box_scores
-  has
 
 # http://stackoverflow.com/questions/14374695/saving-external-json-to-db-with-rails
 #   def self.save_data_from_api

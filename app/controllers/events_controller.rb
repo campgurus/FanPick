@@ -1,35 +1,52 @@
 class EventsController < ApplicationController
   def index
-  	@date = Date.today
-  	games = Xmlstats.events(@date, :nba)
-  	games.each do |event|
-      away_team_create(event)
-      home_team_create(event)
-      site_create(event)
-  		Event.create(
-        event_status: event.event_status,
-		    sport: event.sport,
-		    start_date_time: event.start_date_time,
-		    season_type: event.season_type,
-		    away_team_id: Team.where(team_id: event.away_team.team_id).first.id,
-		    home_team_id: Team.where(team_id: event.home_team.team_id).first.id,
-		    site_id: Site.where(name: event.site.name).first.id,
-		    away_points_scored: event.away_points_scored,
-		    home_points_scored: event.home_points_scored,
-		    event_id: event.event_id
-  		)
-  	end
-  	if event.event_status == "completed"
-  		if event.sport == 'mlb'
-  			save_mlb_box_scores(event)
-  		elsif event.sport == 'nba'
-  			save_nba_box_scores(event)
-  		end
-  	end	
+  	for i in 0..7
+	  	@date = Date.today - i.day
+	  	games = Xmlstats.events(@date, :nba)
+	  	games.each do |event|
+	  		game_found = Event.find_by_event_id(event.event_id)
+	  		if game_found
+	  			game_found.update_attributes(
+				    away_points_scored: event.away_points_scored,
+				    home_points_scored: event.home_points_scored,
+		        event_status: event.event_status
+	  				)
+	  			game_found.save 
+	  		else
+		      away_team_create(event)
+		      home_team_create(event)
+		      site_create(event)
+		  		Event.create(
+		        event_status: event.event_status,
+				    sport: event.sport,
+				    start_date_time: event.start_date_time,
+				    season_type: event.season_type,
+				    away_team_id: Team.where(team_id: event.away_team.team_id).first.id,
+				    home_team_id: Team.where(team_id: event.home_team.team_id).first.id,
+				    site_id: Site.where(name: event.site.name).first.id,
+				    away_points_scored: event.away_points_scored,
+				    home_points_scored: event.home_points_scored,
+				    event_id: event.event_id
+		  		)
+		  	end
+		  	if event.event_status == "completed"
+		  		if event.sport == 'mlb'
+		  			save_mlb_box_scores(event)
+		  		elsif event.sport == 'nba'
+		  			save_nba_box_scores(event)
+		  		end
+		  	end
+		  end
+		end
     @events = Event.all
     @nba_events = Event.select{|e| e.sport == "NBA"}
+    @nba_events_scheduled = @nba_events.select{|e| e.event_status == 'scheduled'}
     @past_events = Event.all.select{|e| e.event_status == "completed"}
     @past_nba_events = @nba_events.select{|e| e.event_status == "completed"}
+  end
+
+  def show
+  	@event = Event.find(params[:id])
   end
 
   def away_team_create(event)
@@ -85,8 +102,9 @@ class EventsController < ApplicationController
   	box_score = Xmlstats.nba_box_score(event.event_id)
   	player_stats = box_score.away_stats + box_score.home_stats # creates a single array with all players
   	player_stats.each do |player|
-  		player_create(player) 
+  		@player = player_create(player) 
 	  	NbaBoxScore.create(
+	  		player_id: @player.id,
 	      event_id: box_score.event_id, #need to confirm that box_score.event_id == event.event_id 
 	      last_name: player.last_name,
 		    first_name: player.first_name,
