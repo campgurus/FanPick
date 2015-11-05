@@ -1,18 +1,20 @@
 class EventsController < ApplicationController
   def index
-  	for i in 0..7
+  	for i in 0..3
 	  	@date = Date.today - i.day
 	  	games = Xmlstats.events(@date, :nba)
 	  	games.each do |event|
 	  		game_found = Event.find_by_event_id(event.event_id)
-	  		if game_found
+	  		if game_found # if event exists in the db, update scores and status
 	  			game_found.update_attributes(
 				    away_points_scored: event.away_points_scored,
 				    home_points_scored: event.home_points_scored,
 		        event_status: event.event_status
 	  				)
-	  			game_found.save 
-	  		else
+	  			game_found.save
+	  			# update player stats
+
+	  		else # if event dn exist, create the team and site objects and the associated event 
 		      away_team_create(event)
 		      home_team_create(event)
 		      site_create(event)
@@ -47,6 +49,7 @@ class EventsController < ApplicationController
 
   def show
   	@event = Event.find(params[:id])
+  	save_nba_box_scores(@event)
   end
 
   def away_team_create(event)
@@ -101,14 +104,18 @@ class EventsController < ApplicationController
   def save_nba_box_scores(event) #creates a box score for each home and away player for completed games
   	box_score = Xmlstats.nba_box_score(event.event_id)
   	player_stats = box_score.away_stats + box_score.home_stats # creates a single array with all players
-  	player_stats.each do |player|
-  		@player = player_create(player) 
+  	box_score.away_stats.each do |player|
+  		@player = Player.create(
+  			first_name: player.first_name,
+  			last_name: player.last_name,
+  			display_name: player.display_name
+  			) 
 	  	NbaBoxScore.create(
 	  		player_id: @player.id,
 	      event_id: box_score.event_id, #need to confirm that box_score.event_id == event.event_id 
-	      last_name: player.last_name,
-		    first_name: player.first_name,
-		    display_name: player.display_name,
+	     #  last_name: player.last_name,
+		    # # first_name: player.first_name,
+		    # display_name: player.display_name,
 		    position: player.position,
 		    minutes: player.minutes,
 		    points: player.points,
@@ -126,8 +133,47 @@ class EventsController < ApplicationController
 		    defensive_rebounds: player.defensive_rebounds,
 		    offensive_rebounds: player.offensive_rebounds,
 		    personal_fouls: player.personal_fouls,
-		    team_id: player.team_id,
-		    is_starter: player.is_starter,
+		    team_id: Team.find_by_team_id(box_score.away_team.team_id).id,
+		    # is_starter: player.is_starter, # causes a no method error, not sure why
+		    field_goal_percentage: player.field_goal_percentage,
+		    three_point_percentage: player.three_point_percentage,
+		    free_throw_percentage: player.free_throw_percentage,
+		    field_goal_percentage_string: player.field_goal_percentage_string,
+		    three_point_field_goal_percentage_string: player.three_point_field_goal_percentage_string,
+		    free_throw_percentage_string: player.free_throw_percentage_string
+	  		)
+    end 
+    box_score.home_stats.each do |player|
+  		@player = Player.create(
+  			first_name: player.first_name,
+  			last_name: player.last_name,
+  			display_name: player.display_name
+  			) 
+	  	NbaBoxScore.create(
+	  		player_id: @player.id,
+	      event_id: box_score.event_id, #need to confirm that box_score.event_id == event.event_id 
+	     #  last_name: player.last_name,
+		    # # first_name: player.first_name,
+		    # display_name: player.display_name,
+		    position: player.position,
+		    minutes: player.minutes,
+		    points: player.points,
+		    assists: player.assists,
+		    turnovers: player.turnovers,
+		    steals: player.steals,
+		    blocks: player.blocks,
+		    rebounds: player.rebounds,
+		    field_goals_attempted: player.field_goals_attempted,
+		    field_goals_made: player.field_goals_made,
+		    three_point_field_goals_attempted: player.three_point_field_goals_attempted,
+		    three_point_field_goals_made: player.three_point_field_goals_made,
+		    free_throws_attempted: player.free_throws_attempted,
+		    free_throws_made: player.free_throws_made,
+		    defensive_rebounds: player.defensive_rebounds,
+		    offensive_rebounds: player.offensive_rebounds,
+		    personal_fouls: player.personal_fouls,
+		    team_id: Team.find_by_team_id(box_score.home_team.team_id).id,
+		    # is_starter: player.is_starter,
 		    field_goal_percentage: player.field_goal_percentage,
 		    three_point_percentage: player.three_point_percentage,
 		    free_throw_percentage: player.free_throw_percentage,
@@ -189,3 +235,10 @@ class EventsController < ApplicationController
   		)
   end
 end
+
+private
+
+	def event_params
+		params.require(:event).permit(:title, :age, :overview, :litigation, :community_action, :agency_id, :category_id, :date, :state_id, :city, :address, :zipcode, :longitude, :latitude, :avatar, :video_url, :remove_avatar, links_attributes: [:id, :url, :_destroy], officers_attributes: [:first_name, :last_name, :title, :avatar, :id, :_destroy], comments_attributes: [:comment, :content, :commentable_id, :commentable_type], subjects_attributes: [:name, :age, :gender_id, :ethnicity_id, :unarmed, :homeless, :veteran, :mentally_ill, :id, :_destroy], article_milestones_attributes:[:date, :description, :milestone_id, :article_id, :id, :_destroy])
+	end
+
