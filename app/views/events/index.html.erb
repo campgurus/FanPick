@@ -15,7 +15,7 @@
 <ul>
 	<% @past_nba_events.sort_by {|e| e.start_date_time}.reverse.each do |event| %>
 		<li>
-		  <%= DateTime.parse(event.start_date_time).strftime("%A, %d %b %Y %l:%M %p") %>
+		  <%= link_to DateTime.parse(event.start_date_time).strftime("%A, %d %b %Y %l:%M %p"), event %>
 		  <%= Team.find(event.home_team_id).full_name %>
 		  <%= event.home_points_scored %>
 		  <%= Team.find(event.away_team_id).full_name %>

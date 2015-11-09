@@ -50,6 +50,9 @@ class EventsController < ApplicationController
   def show
   	@event = Event.find(params[:id])
   	save_nba_box_scores(@event)
+  	if @event.event_status == "completed"
+	  	@box_score = Xmlstats.nba_box_score(@event.event_id)
+	  end
   end
 
   def away_team_create(event)
@@ -105,11 +108,14 @@ class EventsController < ApplicationController
   	box_score = Xmlstats.nba_box_score(event.event_id)
   	player_stats = box_score.away_stats + box_score.home_stats # creates a single array with all players
   	box_score.away_stats.each do |player|
-  		@player = Player.create(
-  			first_name: player.first_name,
-  			last_name: player.last_name,
-  			display_name: player.display_name
-  			) 
+  		@player = Player.find_by_display_name(player.display_name)
+  		if @player == nil
+	  		@player = Player.create(
+	  			first_name: player.first_name,
+	  			last_name: player.last_name,
+	  			display_name: player.display_name
+	  			)
+	  	end
 	  	NbaBoxScore.create(
 	  		player_id: @player.id,
 	      event_id: box_score.event_id, #need to confirm that box_score.event_id == event.event_id 

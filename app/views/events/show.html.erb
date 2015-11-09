@@ -1,8 +1,87 @@
 <h2><%= Team.find(@event.home_team_id).full_name %> vs <%= Team.find(@event.away_team_id).full_name %> </h2>
 <%= @event.event_status %>
 <% if @event.event_status == 'completed' %>
-  <%= @event.home_points_scored %> | <%= @event.home_points_scored %>
-<% end %>
+	<h4>Away team: <%= Team.find(@event.away_team_id).full_name %> | <%= @event.away_points_scored %></h4>
+	<table style="width:100%">
+	  <tr>
+	    <th align="left">Name</th>
+	    <th align="left">Pos</th>
+	    <th align="left">Mins</th>
+	    <th align="left">FGM-A</th>
+	    <th align="left">3PM-A</th>
+	    <th align="left">FTM-A</th>
+	    <th align="left">OREB</th>
+	    <th align="left">DReb</th>
+	    <th align="left">Reb</th>
+	    <th align="left">Ast</th>
+	    <th align="left">Stl</th>
+	    <th align="left">Blk</th>
+	    <th align="left">TO</th>
+	    <th align="left">PF</th>
+	    <th align="left">Points</th>
+	    <th align="left">Fantasy</th>
+	  </tr>
+	  <% @box_score.away_stats.each do |player| %>
+		  <tr>
+		    <td><%= player.display_name %></td>
+		    <td><%= player.position %></td>
+		    <td><%= player.minutes %></td>
+		    <td><%= player.field_goals_made %> - <%= player.field_goals_attempted %></td>
+		    <td><%= player.three_point_field_goals_made %> - <%= player.three_point_field_goals_attempted %></td>
+		    <td><%= player.free_throws_made %> - <%= player.free_throws_attempted %></td>
+		    <td><%= player.offensive_rebounds %></td>
+		    <td><%= player.defensive_rebounds %></td>
+		    <td><%= player.rebounds %></td>
+		    <td><%= player.assists %></td>
+		    <td><%= player.steals %></td>
+		    <td><%= player.blocks %></td>
+		    <td><%= player.turnovers %></td>
+		    <td><%= player.turnovers %></td>
+		    <td><%= player.points %></td>
+		    <td><%= player.points + (player.three_point_field_goals_made/2) + (player.rebounds*5/4) + (player.assists+3/2) + (player.steals*2) + (player.blocks*2) - (player.turnovers/2) %></td>
+		  </tr>
+	  <% end %>
+	</table>
 
-<ul>
-</ul>
+	<h4>Home team: <%= Team.find(@event.home_team_id).full_name %> | <%= @event.home_points_scored %></h4>
+	<table style="width:100%">
+	  <tr>
+	    <th align="left">Name</th>
+	    <th align="left">Pos</th>
+	    <th align="left">Mins</th>
+	    <th align="left">FGM-A</th>
+	    <th align="left">3PM-A</th>
+	    <th align="left">FTM-A</th>
+	    <th align="left">OREB</th>
+	    <th align="left">DReb</th>
+	    <th align="left">Reb</th>
+	    <th align="left">Ast</th>
+	    <th align="left">Stl</th>
+	    <th align="left">Blk</th>
+	    <th align="left">TO</th>
+	    <th align="left">PF</th>
+	    <th align="left">Points</th>
+	    <th align="left">Fantasy</th>
+	  </tr>
+	  <% @box_score.home_stats.each do |player| %>
+		  <tr>
+		    <td><%= player.display_name.truncate(17) %></td>
+		    <td><%= player.position %></td>
+		    <td><%= player.minutes %></td>
+		    <td><%= player.field_goals_made %> - <%= player.field_goals_attempted %></td>
+		    <td><%= player.three_point_field_goals_made %> - <%= player.three_point_field_goals_attempted %></td>
+		    <td><%= player.free_throws_made %> - <%= player.free_throws_attempted %></td>
+		    <td><%= player.offensive_rebounds %></td>
+		    <td><%= player.defensive_rebounds %></td>
+		    <td><%= player.rebounds %></td>
+		    <td><%= player.assists %></td>
+		    <td><%= player.steals %></td>
+		    <td><%= player.blocks %></td>
+		    <td><%= player.turnovers %></td>
+		    <td><%= player.turnovers %></td>
+		    <td><%= player.points %></td>
+		    <td><%= player.points + (player.three_point_field_goals_made/2) + (player.rebounds*5/4) + (player.assists+3/2) + (player.steals*2) + (player.blocks*2) - (player.turnovers/2) %></td>
+		  </tr>
+	  <% end %>
+	</table>
+<% end %>
