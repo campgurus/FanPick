@@ -23,7 +23,7 @@
 	  <% @box_score.away_stats.each do |player| %>
 	  <% @player = Player.find_by_display_name(player.display_name) %>
 		  <tr>
-		    <td><%= link_to player.display_name, player_path(@player) %></td>
+		    <td><%= link_to player.display_name.truncate(17), player_path(@player) %></td>
 		    <td><%= player.position %></td>
 		    <td><%= player.minutes %></td>
 		    <td><%= player.field_goals_made %> - <%= player.field_goals_attempted %></td>
@@ -64,8 +64,9 @@
 	    <th align="left">Fantasy</th>
 	  </tr>
 	  <% @box_score.home_stats.each do |player| %>
+	  <% @player = Player.find_by_display_name(player.display_name) %>
 		  <tr>
-		    <td><%= player.display_name.truncate(17) %></td>
+		    <td><%= link_to player.display_name.truncate(17), player_path(@player) %></td>
 		    <td><%= player.position %></td>
 		    <td><%= player.minutes %></td>
 		    <td><%= player.field_goals_made %> - <%= player.field_goals_attempted %></td>
