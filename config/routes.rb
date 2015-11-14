@@ -1,4 +1,6 @@
 Rails.application.routes.draw do
+  resources :players
+
   mount RailsAdmin::Engine => '/admin', as: 'rails_admin'
   resources :events
   get 'events/index'
