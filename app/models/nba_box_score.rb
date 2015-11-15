@@ -1,6 +1,8 @@
 class NbaBoxScore < ActiveRecord::Base
 	belongs_to :event
 	belongs_to :player
+  validates :event_id, uniqueness: { scope: :player_id,
+    message: "should have one stat line per event-player" }
 
 	def draft_kings_score(stats_line)
 		stats_line.points + (stats_line.three_point_field_goals_made/2) + (stats_line.rebounds*5/4) + (stats_line.assists+3/2) + (stats_line.steals*2) + (stats_line.blocks*2) - (stats_line.turnovers/2)

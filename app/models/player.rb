@@ -2,6 +2,10 @@ class Player < ActiveRecord::Base
   has_many :nba_box_scores
   validates :display_name, :uniqueness => true
 
+  def box_scores
+    NbaBoxScore.where(player_id: self.id)
+  end
+
 	# Overriding the save function so as to update the average every time the object gets saved
   # def save
   #   self.games_played = NbaBoxScore.where(player_id: self.id).count

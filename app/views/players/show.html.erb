@@ -1,1 +1,45 @@
-<h1>Aggregated stats for <%= @player.display_name %></h1>
+<h1>Stats for <%= @player.display_name %></h1>
+<table style="width:100%">
+	  <tr>
+	    <th align="left">Team</th>
+	    <th align="left">Event Summary</th>
+	    <th align="left">Pos</th>
+	    <th align="left">Mins</th>
+	    <th align="left">FGM-A</th>
+	    <th align="left">3PM-A</th>
+	    <th align="left">FTM-A</th>
+	    <th align="left">OREB</th>
+	    <th align="left">DReb</th>
+	    <th align="left">Reb</th>
+	    <th align="left">Ast</th>
+	    <th align="left">Stl</th>
+	    <th align="left">Blk</th>
+	    <th align="left">TO</th>
+	    <th align="left">PF</th>
+	    <th align="left">Points</th>
+	    <th align="left">DKings</th>
+	    <th align="left">FanDuel</th>
+	  </tr>
+    <% @player.box_scores.each do |game_stats| %>
+		  <tr>
+		    <td><%= Team.find(game_stats.team_id).abbreviation %></td>
+		    <td><%= Event.find_by_event_id(game_stats.event_id).try(:event_id) || "No event id available" %></td>
+		    <td><%= game_stats.position %></td>
+		    <td><%= game_stats.minutes %></td>
+		    <td><%= game_stats.field_goals_made %> - <%= game_stats.field_goals_attempted %></td>
+		    <td><%= game_stats.three_point_field_goals_made %> - <%= game_stats.three_point_field_goals_attempted %></td>
+		    <td><%= game_stats.free_throws_made %> - <%= game_stats.free_throws_attempted %></td>
+		    <td><%= game_stats.offensive_rebounds %></td>
+		    <td><%= game_stats.defensive_rebounds %></td>
+		    <td><%= game_stats.rebounds %></td>
+		    <td><%= game_stats.assists %></td>
+		    <td><%= game_stats.steals %></td>
+		    <td><%= game_stats.blocks %></td>
+		    <td><%= game_stats.turnovers %></td>
+		    <td><%= game_stats.turnovers %></td>
+		    <td><%= game_stats.points %></td>
+		    <td><%= game_stats.points + (game_stats.three_point_field_goals_made/2) + (game_stats.rebounds*5/4) + (game_stats.assists*3/2) + (game_stats.steals*2) + (game_stats.blocks*2) - (game_stats.turnovers/2) %></td>
+		    <td><%= game_stats.points + (game_stats.three_point_field_goals_made/2) + (game_stats.rebounds*6/5) + (game_stats.assists*3/2) + (game_stats.steals*2) + (game_stats.blocks*2) - (game_stats.turnovers) %></td>
+		  </tr>
+	  <% end %>
+	</table>
