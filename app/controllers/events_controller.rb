@@ -1,7 +1,7 @@
 class EventsController < ApplicationController
   def index
   	for i in 0..3
-	  	@date = Date.today - i.day - 3
+	  	@date = Date.today - i.day
 	  	games = Xmlstats.events(@date, :nba)
 	  	games.each do |event|
 	  		game_found = Event.find_by_event_id(event.event_id)
