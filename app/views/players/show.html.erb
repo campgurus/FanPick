@@ -1,6 +1,41 @@
 <h1>Stats for <%= @player.display_name %></h1>
 <table style="width:100%">
 	  <tr>
+	    <th align="left">Mins</th>
+	    <th align="left">FGM-A</th>
+	    <th align="left">3PM-A</th>
+	    <th align="left">FTM-A</th>
+	    <th align="left">OREB</th>
+	    <th align="left">DReb</th>
+	    <th align="left">Reb</th>
+	    <th align="left">Ast</th>
+	    <th align="left">Stl</th>
+	    <th align="left">Blk</th>
+	    <th align="left">TO</th>
+	    <th align="left">PF</th>
+	    <th align="left">Points</th>
+	    <th align="left">DKings</th>
+	    <th align="left">FanDuel</th>
+	  </tr>
+	  <tr>
+	    <td><%= @player.box_scores.average(:minutes).to_s %></td>
+	    <td><%= @player.box_scores.average(:field_goals_made).to_s %> - <%= @player.box_scores.average(:field_goals_attempted).to_s %></td>
+	    <td><%= @player.box_scores.average(:three_point_field_goals_made).to_s %> - <%= @player.box_scores.average(:three_point_field_goals_attempted).to_s %></td>
+	    <td><%= @player.box_scores.average(:free_throws_made).to_s %> - <%= @player.box_scores.average(:free_throws_attempted).to_s %></td>
+	    <td><%= @player.box_scores.average(:offensive_rebounds).to_s %></td>
+	    <td><%= @player.box_scores.average(:defensive_rebounds).to_s %></td>
+	    <td><%= @player.box_scores.average(:rebounds).to_s %></td>
+	    <td><%= @player.box_scores.average(:assists).to_s %></td>
+	    <td><%= @player.box_scores.average(:steals).to_s %></td>
+	    <td><%= @player.box_scores.average(:blocks).to_s %></td>
+	    <td><%= @player.box_scores.average(:turnovers).to_s %></td>
+	    <td><%= @player.box_scores.average(:personal_fouls).to_s %></td>
+	    <td><%= @player.box_scores.average(:points).to_s %></td>
+	  </tr>
+	</table>
+
+<table style="width:100%">
+	  <tr>
 	    <th align="left">Team</th>
 	    <th align="left">Event Summary</th>
 	    <th align="left">Pos</th>

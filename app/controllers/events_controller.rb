@@ -1,6 +1,6 @@
 class EventsController < ApplicationController
   def index
-  	for i in 0..3
+  	for i in 3..5
 	  	@date = Date.today - i.day
 	  	games = Xmlstats.events(@date, :nba)
 	  	games.each do |event|
